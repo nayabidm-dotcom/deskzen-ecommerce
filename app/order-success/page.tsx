@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle2, Package, Home as HomeIcon } from 'lucide-react';
@@ -7,7 +7,7 @@ import { useStore } from '@/lib/store';
 import { formatINR } from '@/lib/products';
 import { Order } from '@/types';
 
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
   const params = useSearchParams();
   const orderNumber = params.get('order');
   const { orders, findOrder, hydrated } = useStore();
@@ -80,5 +80,13 @@ export default function OrderSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={<div className="pt-32 text-center text-muted">Loading order details...</div>}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }
